@@ -46,6 +46,13 @@
 #include "relay-server.h"
 
 
+#ifdef HAVE_GNUTLS
+ /* These don't exist in older GnuTLS versions */
+#if (GNUTLS_VERSION_MAJOR < 2)
+typedef gnutls_transport_ptr_t gnutls_transport_ptr;
+#endif
+#endif
+
 char *relay_client_status_string[] =   /* strings for status                */
 { N_("connecting"), N_("waiting auth"),
   N_("connected"), N_("auth failed"), N_("disconnected")
@@ -694,7 +701,7 @@ relay_client_new (int sock, const char *address, struct t_relay_server *server)
             gnutls_credentials_set (new_client->gnutls_sess, GNUTLS_CRD_CERTIFICATE, relay_gnutls_x509_cred);
             gnutls_certificate_server_set_request (new_client->gnutls_sess, GNUTLS_CERT_IGNORE);
             gnutls_transport_set_ptr (new_client->gnutls_sess,
-                                      (gnutls_transport_ptr) ((ptrdiff_t) new_client->sock));
+                                      (gnutls_transport_ptr_t) ((ptrdiff_t) new_client->sock));
             ptr_option = weechat_config_get ("weechat.network.gnutls_handshake_timeout");
             new_client->hook_timer_handshake = weechat_hook_timer (1000 / 10,
                                                                    0,
