@@ -6655,7 +6655,7 @@ command_init ()
                      "same configuration (files *.conf).\n"
                      "It is possible to restore WeeChat session on another "
                      "machine if you copy the content of directory \"~/.weechat\""),
-                  "%(filename)",
+                  "%(filename)|-quit",
                   &command_upgrade, NULL);
     hook_command (NULL, "uptime",
                   N_("show WeeChat uptime"),
